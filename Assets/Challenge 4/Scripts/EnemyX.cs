@@ -9,6 +9,7 @@ public class EnemyX : MonoBehaviour
     private GameObject playerGoal;
     private SpawnManagerX smScript;
     private float waveCount;
+    public ParticleSystem explosionParticle;
 
     // Start is called before the first frame update
     void Start()
@@ -35,10 +36,12 @@ public class EnemyX : MonoBehaviour
         if (other.gameObject.name == "Enemy Goal")
         {
             Destroy(gameObject);
+            Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
         } 
         else if (other.gameObject.name == "Player Goal")
         {
             Destroy(gameObject);
+            Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
         }
 
     }

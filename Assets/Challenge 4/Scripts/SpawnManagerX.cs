@@ -6,6 +6,7 @@ public class SpawnManagerX : MonoBehaviour
 {
     public GameObject enemyPrefab;
     public GameObject powerupPrefab;
+    public GameObject focalPoint;
 
     private float spawnRangeX = 10;
     private float spawnZMin = 15; // set min spawn Z
@@ -63,6 +64,7 @@ public class SpawnManagerX : MonoBehaviour
     void ResetPlayerPosition ()
     {
         player.transform.position = new Vector3(0, 1, -7);
+        focalPoint.transform.rotation = Quaternion.Euler(0, 0, 0);
         player.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 

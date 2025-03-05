@@ -29,9 +29,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FresnelPower: 0.12
+    - _FresnelPower: 0.07
     m_Colors:
-    - _Color: {r: 3.3882349, g: 8.981045, b: 23.968628, a: 1}
+    - _Color: {r: 6.7764697, g: 17.96209, b: 47.937256, a: 1}
     - _ScrollDirection: {r: 0, g: 0.1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
