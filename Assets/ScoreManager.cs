@@ -45,6 +45,7 @@ public class ScoreManager : MonoBehaviour
         {
             timer = 0;
             Debug.Log("Time's up!");
+            FindObjectOfType<AudioManager>().Play("FinalWhistle");
         }
     }
 

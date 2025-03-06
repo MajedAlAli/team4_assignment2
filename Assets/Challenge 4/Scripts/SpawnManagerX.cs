@@ -67,6 +67,7 @@ public class SpawnManagerX : MonoBehaviour
         focalPoint.transform.rotation = Quaternion.Euler(0, 0, 0);
         player.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        FindObjectOfType<AudioManager>().Play("StartWhistle");
 
     }
 

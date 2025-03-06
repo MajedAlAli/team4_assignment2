@@ -39,6 +39,7 @@ public class EnemyX : MonoBehaviour
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             ScoreManager.instance.AddPointHome();
             ScoreManager.instance.DisplayMessageHome();
+            FindObjectOfType<AudioManager>().Play("Goal");
         } 
         else if (other.gameObject.name == "Player Goal")
         {
@@ -46,6 +47,13 @@ public class EnemyX : MonoBehaviour
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             ScoreManager.instance.AddPointAway();
             ScoreManager.instance.DisplayMessageAway();
+            FindObjectOfType<AudioManager>().Play("Goal");
+        }else if (other.gameObject.CompareTag("Wall"))
+        {
+            FindObjectOfType<AudioManager>().Play("CollisionWall");
+        }else if (other.gameObject.CompareTag("Enemy"))
+        {
+            FindObjectOfType<AudioManager>().Play("CollisionBall");
         }
 
     }

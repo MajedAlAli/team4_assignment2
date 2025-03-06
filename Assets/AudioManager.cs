@@ -16,10 +16,17 @@ public class AudioManager : MonoBehaviour
 
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
+            s.source.loop = s.loop;
         }
     }
 
-    public void Play (string name)
+    void Start()
+    {
+        Play("Theme");
+        Play("StartWhistle");
+    }
+
+    public void Play(string name)
     {
         Sound s = Array.Find(sounds, sounds => sounds.name == name);
         s.source.Play();
