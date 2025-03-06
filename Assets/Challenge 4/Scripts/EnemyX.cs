@@ -37,11 +37,13 @@ public class EnemyX : MonoBehaviour
         {
             Destroy(gameObject);
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+            ScoreManager.instance.AddPointHome();
         } 
         else if (other.gameObject.name == "Player Goal")
         {
             Destroy(gameObject);
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+            ScoreManager.instance.AddPointAway();
         }
 
     }
