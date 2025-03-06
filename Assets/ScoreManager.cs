@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -9,9 +10,14 @@ public class ScoreManager : MonoBehaviour
     public TMP_Text HomeScore;
     public TMP_Text AwayScore;
     public TMP_Text TimerText;
+    public TMP_Text GoalHome;
+    public TMP_Text GoalAway;
+
     int homeCount = 0;
     int awayCount = 0;
     public float timer = 180f;
+    public float activeTime = 2f;
+
 
     private void Awake()
     {
@@ -21,6 +27,8 @@ public class ScoreManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        GoalHome.gameObject.SetActive(false);
+        GoalAway.gameObject.SetActive(false);
         HomeScore.text = homeCount.ToString();
         AwayScore.text = awayCount.ToString();
     }
@@ -60,5 +68,22 @@ public class ScoreManager : MonoBehaviour
             int seconds = Mathf.FloorToInt(timer % 60);
             TimerText.text = string.Format("{0}:{1:00}", minutes, seconds);
         }
+    }
+
+    public void DisplayMessageHome()
+    {
+        StartCoroutine(Display(GoalHome));
+    }
+
+    public void DisplayMessageAway()
+    {
+        StartCoroutine(Display(GoalAway));
+    }
+
+    IEnumerator Display(TMP_Text text)
+    {
+        text.gameObject.SetActive(true);
+        yield return new WaitForSeconds(activeTime);
+        text.gameObject.SetActive(false);
     }
 }
