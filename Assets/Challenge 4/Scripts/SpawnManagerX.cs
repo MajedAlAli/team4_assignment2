@@ -8,7 +8,7 @@ public class SpawnManagerX : MonoBehaviour
     public GameObject heavyEnemyPrefab;
     public GameObject speedsterPrefab;
     public GameObject tricksterPrefab;
-    public GameObject exploderPrefab; // Exploder Prefab
+    public GameObject exploderPrefab;
     public GameObject powerupPrefab;
 
     private float spawnRangeX = 10;
@@ -52,51 +52,35 @@ public class SpawnManagerX : MonoBehaviour
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
-            Debug.Log("Spawned Normal Enemy");
+            Debug.Log(" Spawned Normal Enemy");
         }
 
-        // Spawn heavy enemies every 3 rounds
-        if (waveCount % 3 == 0)
+        //  After Round 3, spawn one more Heavy Enemy each wave
+        if (waveCount >= 3)
         {
-            int heavyEnemyCount = waveCount / 3;
-            for (int i = 0; i < heavyEnemyCount; i++)
-            {
-                Instantiate(heavyEnemyPrefab, GenerateSpawnPosition(), heavyEnemyPrefab.transform.rotation);
-                Debug.Log("Spawned Heavy Enemy");
-            }
+            Instantiate(heavyEnemyPrefab, GenerateSpawnPosition(), heavyEnemyPrefab.transform.rotation);
+            Debug.Log(" Spawned Heavy Enemy!");
         }
 
-        // Spawn speedster enemies every 4 rounds
-        if (waveCount % 4 == 0)
+        //  After Round 3, spawn one more Speedster each wave
+        if (waveCount >= 3)
         {
-            int speedsterCount = waveCount / 4;
-            for (int i = 0; i < speedsterCount; i++)
-            {
-                Instantiate(speedsterPrefab, GenerateSpawnPosition(), speedsterPrefab.transform.rotation);
-                Debug.Log("Spawned Speedster Enemy");
-            }
+            Instantiate(speedsterPrefab, GenerateSpawnPosition(), speedsterPrefab.transform.rotation);
+            Debug.Log(" Spawned Speedster Enemy!");
         }
 
-        // Spawn trickster enemies every 5 rounds
-        if (waveCount % 5 == 0)
+        //  After Round 3, spawn one more Trickster each wave
+        if (waveCount >= 3)
         {
-            int tricksterCount = waveCount / 5;
-            for (int i = 0; i < tricksterCount; i++)
-            {
-                Instantiate(tricksterPrefab, GenerateSpawnPosition(), tricksterPrefab.transform.rotation);
-                Debug.Log("Spawned Trickster Enemy!");
-            }
+            Instantiate(tricksterPrefab, GenerateSpawnPosition(), tricksterPrefab.transform.rotation);
+            Debug.Log(" Spawned Trickster Enemy!");
         }
 
-        // 💥 Spawn exploder enemies every 6 rounds
-        if (waveCount % 6 == 0)
+        //  After Round 3, spawn one more Exploder each wave
+        if (waveCount >= 3)
         {
-            int exploderCount = waveCount / 6;
-            for (int i = 0; i < exploderCount; i++)
-            {
-                Instantiate(exploderPrefab, GenerateSpawnPosition(), exploderPrefab.transform.rotation);
-                Debug.Log("Spawned Exploder Enemy!");
-            }
+            Instantiate(exploderPrefab, GenerateSpawnPosition(), exploderPrefab.transform.rotation);
+            Debug.Log(" Spawned Exploder Enemy!");
         }
 
         waveCount++;
@@ -110,4 +94,3 @@ public class SpawnManagerX : MonoBehaviour
         player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
     }
 }
-

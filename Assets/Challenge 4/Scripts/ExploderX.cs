@@ -5,30 +5,42 @@ using UnityEngine;
 public class ExploderX : MonoBehaviour
 {
     public float speed = 8f; // Movement speed
-    public float explosionForce = 15f; // How strong the explosion is
-    public float explosionRadius = 5f; // The area of effect of the explosion
-    public GameObject explosionEffect; // Optional particle effect for explosion
+    public float explosionForce = 20f; // Explosion force
+    public float explosionRadius = 5f; // Explosion area of effect
+    public GameObject explosionEffectPrefab; // Particle effect for explosion
 
     private Rigidbody exploderRb;
-    private GameObject playerGoal;
+    private GameObject player;
 
     void Start()
     {
         exploderRb = GetComponent<Rigidbody>();
-        playerGoal = GameObject.Find("Player Goal");
+        player = GameObject.FindGameObjectWithTag("Player"); // Make sure Player is tagged as "Player"
+
+        if (exploderRb == null)
+        {
+            Debug.LogError(" Exploder is missing a Rigidbody! Add one in the Inspector.");
+        }
+
+        if (explosionEffectPrefab == null)
+        {
+            Debug.LogError(" Explosion Effect is not assigned! Drag 'Explosionn' prefab into the ExploderX script in the Inspector.");
+        }
     }
 
     void Update()
     {
         // Move towards the player goal
-        Vector3 lookDirection = (playerGoal.transform.position - transform.position).normalized;
+        Vector3 lookDirection = (player.transform.position - transform.position).normalized;
         exploderRb.AddForce(lookDirection * speed * Time.deltaTime);
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnCollisionEnter(Collision collision)
     {
-        // If colliding with a goal, explode
-        if (other.gameObject.name == "Enemy Goal" || other.gameObject.name == "Player Goal")
+        Debug.Log(" Exploder collided with: " + collision.gameObject.name);
+
+        //  Only explode if colliding with the Player
+        if (collision.gameObject.CompareTag("Player"))
         {
             Explode();
         }
@@ -36,12 +48,14 @@ public class ExploderX : MonoBehaviour
 
     void Explode()
     {
-        Debug.Log("Exploder Enemy exploded!");
+        Debug.Log(" Exploder Enemy exploded!");
 
         // Instantiate explosion effect (if assigned)
-        if (explosionEffect != null)
+        if (explosionEffectPrefab != null)
         {
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
+            GameObject explosionInstance = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
+            Destroy(explosionInstance, 2f); // Destroy explosion effect after 2 seconds
+            Debug.Log(" Explosion Effect Created!");
         }
 
         // Find all nearby objects within the explosion radius
@@ -52,7 +66,7 @@ public class ExploderX : MonoBehaviour
             Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                // Apply explosion force
+                Debug.Log(" Applying Explosion Force to: " + nearbyObject.name);
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, 1f, ForceMode.Impulse);
             }
         }
