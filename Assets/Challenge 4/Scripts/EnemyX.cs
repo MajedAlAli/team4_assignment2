@@ -38,6 +38,7 @@ public class EnemyX : MonoBehaviour
         // If enemy collides with either goal, destroy it
         if (other.gameObject.name == "Enemy Goal")
         {
+            FindAnyObjectByType<AudioManager>().Play("Explode");
             Destroy(gameObject);
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             ScoreManager.instance.AddPointHome();
@@ -47,6 +48,7 @@ public class EnemyX : MonoBehaviour
         } 
         else if (other.gameObject.name == "Player Goal")
         {
+            FindAnyObjectByType<AudioManager>().Play("Explode");
             Destroy(gameObject);
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             ScoreManager.instance.AddPointAway();

@@ -46,6 +46,7 @@ public class PlayerControllerX : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Powerup"))
         {
+            FindAnyObjectByType<AudioManager>().Play("PowerUp");
             Destroy(other.gameObject);
             hasPowerup = true;
             powerupIndicator.SetActive(true);
@@ -56,7 +57,9 @@ public class PlayerControllerX : MonoBehaviour
     // Coroutine to count down powerup duration
     IEnumerator PowerupCooldown()
     {
+        FindAnyObjectByType<AudioManager>().Play("PowerUp CountDown");
         yield return new WaitForSeconds(powerUpDuration);
+        FindAnyObjectByType<AudioManager>().Stop("PowerUp CountDown");
         hasPowerup = false;
         powerupIndicator.SetActive(false);
     }
@@ -66,16 +69,17 @@ public class PlayerControllerX : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            FindAnyObjectByType<AudioManager>().Play("CollisionBall");
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
             Vector3 awayFromPlayer =  other.gameObject.transform.position  - transform.position;           
 
             if (hasPowerup) // if have powerup hit enemy with powerup force
             {
+                FindAnyObjectByType<AudioManager>().Play("PowerUp Hit");
                 enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
             }
             else // if no powerup, hit enemy with normal strength 
             {
+                FindAnyObjectByType<AudioManager>().Play("CollisionBall");
                 enemyRigidbody.AddForce(awayFromPlayer * normalStrength, ForceMode.Impulse);
             }
 

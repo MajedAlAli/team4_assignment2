@@ -278,6 +278,7 @@ MonoBehaviour:
   explosionParticle: {fileID: 2088871590894813759, guid: 745208c9d6e104225bd99e1ab894e3bb, type: 3}
   ball: {fileID: -8916545268119092182}
   wall: {fileID: 3878580431703916322}
+  explode: {fileID: 0}
 --- !u!114 &1291255971543755030
 MonoBehaviour:
   m_ObjectHideFlags: 0
