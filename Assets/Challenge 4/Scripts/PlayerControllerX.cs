@@ -15,9 +15,8 @@ public class PlayerControllerX : MonoBehaviour
     private float normalStrength = 10; // how hard to hit enemy without powerup
     private float powerupStrength = 25; // how hard to hit enemy with powerup
     
-    private float boost = 10;
+    private float boost = 15f;
     public ParticleSystem smokeParticle;
-    private bool isRolling = false;
 
     void Start()
     {
@@ -35,31 +34,11 @@ public class PlayerControllerX : MonoBehaviour
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.4f, 0);  
 
         if(Input.GetKeyDown(KeyCode.Space)){
-            FindAnyObjectByType<AudioManager>().Play("Boost");
             playerRb.AddForce(focalPoint.transform.forward * boost, ForceMode.Impulse);
             smokeParticle.Play();
+            FindAnyObjectByType<AudioManager>().Play("Boost");
         }
-        HandleRollingSound();
-    }
 
-    void HandleRollingSound()
-    {
-        if (playerRb.linearVelocity.magnitude > 0.1f)
-        {
-            if (!isRolling)
-            {
-                FindAnyObjectByType<AudioManager>().Play("Rolling");
-                isRolling = true;
-            }
-        }
-        else
-        {
-            if (isRolling)
-            {
-                FindAnyObjectByType<AudioManager>().Stop("Rolling");
-                isRolling = false;
-            }
-        }
     }
 
     // If Player collides with powerup, activate powerup
@@ -106,7 +85,4 @@ public class PlayerControllerX : MonoBehaviour
             FindAnyObjectByType<AudioManager>().Play("CollisionWall");
         }
     }
-
-
-
 }
