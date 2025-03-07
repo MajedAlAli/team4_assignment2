@@ -17,13 +17,15 @@ public class PlayerControllerX : MonoBehaviour
     
     private float boost = 10;
     public ParticleSystem smokeParticle;
+    private bool isRolling = false;
+
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
@@ -33,10 +35,31 @@ public class PlayerControllerX : MonoBehaviour
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.4f, 0);  
 
         if(Input.GetKeyDown(KeyCode.Space)){
+            FindAnyObjectByType<AudioManager>().Play("Boost");
             playerRb.AddForce(focalPoint.transform.forward * boost, ForceMode.Impulse);
             smokeParticle.Play();
         }
+        HandleRollingSound();
+    }
 
+    void HandleRollingSound()
+    {
+        if (playerRb.linearVelocity.magnitude > 0.1f)
+        {
+            if (!isRolling)
+            {
+                FindAnyObjectByType<AudioManager>().Play("Rolling");
+                isRolling = true;
+            }
+        }
+        else
+        {
+            if (isRolling)
+            {
+                FindAnyObjectByType<AudioManager>().Stop("Rolling");
+                isRolling = false;
+            }
+        }
     }
 
     // If Player collides with powerup, activate powerup
@@ -64,7 +87,7 @@ public class PlayerControllerX : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            FindObjectOfType<AudioManager>().Play("CollisionBall");
+            FindAnyObjectByType<AudioManager>().Play("CollisionBall");
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
             Vector3 awayFromPlayer =  other.gameObject.transform.position  - transform.position;           
 
@@ -80,7 +103,7 @@ public class PlayerControllerX : MonoBehaviour
 
         }else if (other.gameObject.CompareTag("Wall")||other.gameObject.CompareTag("Goal"))
         {
-            FindObjectOfType<AudioManager>().Play("CollisionWall");
+            FindAnyObjectByType<AudioManager>().Play("CollisionWall");
         }
     }
 

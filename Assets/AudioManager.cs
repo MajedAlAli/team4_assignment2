@@ -23,12 +23,32 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         Play("Theme");
+        Play("StadiumAmbience");
         Play("StartWhistle");
     }
 
     public void Play(string name)
     {
         Sound s = Array.Find(sounds, sounds => sounds.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: "+name+" not found!");
+            return;
+        }
         s.source.Play();
+    }
+
+    public void Stop(string name)
+    {
+        Sound s = Array.Find(sounds, sounds => sounds.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound: "+name+" not found!");
+            return;
+        }
+        else if (s.source.isPlaying)
+        {
+            s.source.Stop();
+        }
     }
 }

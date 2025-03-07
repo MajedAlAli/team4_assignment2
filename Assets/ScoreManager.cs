@@ -21,7 +21,15 @@ public class ScoreManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -35,19 +43,29 @@ public class ScoreManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+{
+    if (timer > 0)
     {
-         if (timer > 0)
+        timer -= Time.deltaTime;
+        UpdateTimerUI();
+
+        if (Mathf.FloorToInt(timer) == 10)
         {
-            timer -= Time.deltaTime;
-            UpdateTimerUI();
+            FindAnyObjectByType<AudioManager>().Play("CountDown");
         }
-        else
+        else if (Mathf.FloorToInt(timer) == 1)
         {
-            timer = 0;
-            Debug.Log("Time's up!");
-            FindObjectOfType<AudioManager>().Play("FinalWhistle");
+            FindAnyObjectByType<AudioManager>().Stop("CountDown");
         }
     }
+    else if (timer <= 0 && timer != -1)
+    {
+        timer = -1;
+        FindAnyObjectByType<AudioManager>().Play("FinalWhistle");
+        Debug.Log("Time's up!");
+    }
+}
+
 
     public void AddPointHome()
     {
