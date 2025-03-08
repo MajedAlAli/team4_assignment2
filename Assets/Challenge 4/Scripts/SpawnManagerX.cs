@@ -12,6 +12,9 @@ public class SpawnManagerX : MonoBehaviour
     public GameObject powerupPrefab;
     public GameObject magnetBoostPrefab; // ✅ Magnet Boost Powerup
 
+    public GameObject doubleTroublePrefab; // Assign in Inspector
+
+
     private float spawnRangeX = 10;
     private float spawnZMin = 15;
     private float spawnZMax = 25;
@@ -90,6 +93,17 @@ public class SpawnManagerX : MonoBehaviour
                 Instantiate(exploderPrefab, GenerateSpawnPosition(), exploderPrefab.transform.rotation);
             }
         }
+
+        // 55% chance to spawn Double Trouble powerup
+        if (Random.Range(0, 100) < 55)
+        {
+            Instantiate(doubleTroublePrefab, GenerateSpawnPosition(), doubleTroublePrefab.transform.rotation);
+            Debug.Log("🔥 Double Trouble Powerup Spawned!");
+        }
+
+
+
+
 
         // ✅ Spawn Normal Powerup (If No Powerups Exist)
         if (GameObject.FindGameObjectsWithTag("Powerup").Length == 0)

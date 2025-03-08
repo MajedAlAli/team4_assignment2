@@ -53,26 +53,37 @@ public class PlayerControllerX : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // ✅ Double Trouble Powerup Detection
+        if (other.gameObject.name.Contains("DoubleTrouble"))
+        {
+            Debug.Log("🔥 Double Trouble Activated! Summoning AI Ally!");
+            SpawnAIAlly(); // ✅ Summon AI Ally
+            Destroy(other.gameObject);
+            return; // 🚨 Ensures it doesn't get processed as a normal powerup!
+        }
+
+        // ✅ Magnet Boost Detection
+        if (other.gameObject.name.Contains("MagnetBoost"))
+        {
+            hasMagnetBoost = true;
+            powerupIndicator.SetActive(true);
+            Destroy(other.gameObject);
+            StartCoroutine(MagnetBoostCooldown());
+            Debug.Log("🧲 Magnet Boost Activated!");
+            return; // 🚨 Prevents misclassification
+        }
+
+        // ✅ Normal Powerup Detection
         if (other.gameObject.CompareTag("Powerup"))
         {
-            if (other.gameObject.name.Contains("MagnetBoost"))
-            {
-                hasMagnetBoost = true;
-                powerupIndicator.SetActive(true);
-                Destroy(other.gameObject);
-                StartCoroutine(MagnetBoostCooldown());
-                Debug.Log("🧲 Magnet Boost Activated!");
-            }
-            else
-            {
-                hasPowerup = true;
-                powerupIndicator.SetActive(true);
-                Destroy(other.gameObject);
-                StartCoroutine(PowerupCooldown());
-                Debug.Log("⚡ Normal Powerup Activated!");
-            }
+            hasPowerup = true;
+            powerupIndicator.SetActive(true);
+            Destroy(other.gameObject);
+            StartCoroutine(PowerupCooldown());
+            Debug.Log("⚡ Normal Powerup Activated!");
         }
     }
+
 
     // ✅ Magnet Boost Lasts 20 Seconds
     IEnumerator MagnetBoostCooldown()
@@ -149,5 +160,25 @@ public class PlayerControllerX : MonoBehaviour
             }
         }
     }
+    public GameObject aiAllyPrefab; // ✅ Make sure this is assigned in the Inspector
+
+    void SpawnAIAlly()
+    {
+        if (aiAllyPrefab != null)
+        {
+            Vector3 spawnPosition = transform.position + new Vector3(2, 0, 0); // ✅ Spawns near the player
+            Instantiate(aiAllyPrefab, spawnPosition, Quaternion.identity);
+            Debug.Log("🔥 AI Ally Spawned!");
+        }
+        else
+        {
+            Debug.LogError("❌ AI Ally Prefab is NOT assigned in the Inspector!");
+        }
+    }
+
+
+
+
+
 }
 

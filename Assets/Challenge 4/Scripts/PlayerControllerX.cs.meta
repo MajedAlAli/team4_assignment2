@@ -3,7 +3,9 @@ guid: 5036a60f22d8542ca830e4578804462b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - powerupIndicator: {instanceID: 0}
+  - aiAllyPrefab: {fileID: 8932280921958007952, guid: a5cbb74710e33244fa5539439bc3e053, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
