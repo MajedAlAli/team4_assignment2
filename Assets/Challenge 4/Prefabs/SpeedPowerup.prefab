@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 4450321389304510131}
   - component: {fileID: 4459577838175518941}
   - component: {fileID: 7163494309410355767}
+  - component: {fileID: -2902451132437541239}
   m_Layer: 0
-  m_Name: Powerup 4
+  m_Name: SpeedPowerup
   m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9180f093382e74cf3822c48b6ad21e49, type: 2}
+  - {fileID: 2100000, guid: 41680dad0f0243748b4e228f49a2e3c4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,3 +109,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.528658, y: 0.43810678, z: 0.4578313}
   m_Center: {x: 0, y: -0.000000022351742, z: 0}
+--- !u!114 &-2902451132437541239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4446131693967519089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b946a3ea752d648959e38cf226e1ffb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerupType: 0
