@@ -70,7 +70,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4b4c571b071c6504a85f8d54aa26ab03, type: 2}
+  - {fileID: 2100000, guid: 8cb0fbf576e9d3f42bec854508384666, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72f7497299dd4d7438f917cb321bd1a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 40
   explosionForce: 15
   explosionRadius: 5
   explosionEffectPrefab: {fileID: 6618480870214641184, guid: eb43f49084d5da4469ef30b9f086ecf3, type: 3}
@@ -186,7 +186,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:

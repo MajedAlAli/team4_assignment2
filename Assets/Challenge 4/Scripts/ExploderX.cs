@@ -37,14 +37,17 @@ public class ExploderX : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(" Exploder collided with: " + collision.gameObject.name);
+        Debug.Log(" Exploder collided with: " + collision.gameObject.name + " | Tag: " + collision.gameObject.tag);
 
-        //  Only explode if colliding with the Player
+        // Only explode if colliding with the Player
         if (collision.gameObject.CompareTag("Player"))
         {
+            Debug.Log(" Exploder HIT THE PLAYER! Initiating explosion...");
             Explode();
         }
     }
+
+
 
     void Explode()
     {
@@ -57,10 +60,13 @@ public class ExploderX : MonoBehaviour
             Destroy(explosionInstance, 2f); // Destroy explosion effect after 2 seconds
             Debug.Log(" Explosion Effect Created!");
         }
+        else
+        {
+            Debug.LogError(" No Explosion Effect Assigned!");
+        }
 
         // Find all nearby objects within the explosion radius
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
-
         foreach (Collider nearbyObject in colliders)
         {
             Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
@@ -74,4 +80,5 @@ public class ExploderX : MonoBehaviour
         // Destroy the exploder enemy after explosion
         Destroy(gameObject);
     }
+
 }

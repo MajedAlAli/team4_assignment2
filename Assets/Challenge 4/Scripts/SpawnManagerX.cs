@@ -10,6 +10,7 @@ public class SpawnManagerX : MonoBehaviour
     public GameObject tricksterPrefab;
     public GameObject exploderPrefab;
     public GameObject powerupPrefab;
+    public GameObject magnetBoostPrefab; // ✅ Magnet Boost Powerup
 
     private float spawnRangeX = 10;
     private float spawnZMin = 15;
@@ -37,52 +38,74 @@ public class SpawnManagerX : MonoBehaviour
         return new Vector3(xPos, 0, zPos);
     }
 
-    void SpawnEnemyWave(int enemiesToSpawn)
+    void SpawnEnemyWave(int wave)
     {
-        Vector3 powerupSpawnOffset = new Vector3(0, 0, -15);
+        Debug.Log(" Wave Count: " + wave);
 
+        int cycle = (wave - 1) / 5;
+        int baseEnemies = 1 + cycle;
+
+        // ✅ Spawn Normal Enemies
+        for (int i = 0; i < baseEnemies; i++)
+        {
+            Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+        }
+
+        // ✅ Spawn Heavy Enemies (Wave 2+)
+        if (wave >= 2)
+        {
+            int heavyEnemies = 1 + (wave - 2) / 5;
+            for (int i = 0; i < heavyEnemies; i++)
+            {
+                Instantiate(heavyEnemyPrefab, GenerateSpawnPosition(), heavyEnemyPrefab.transform.rotation);
+            }
+        }
+
+        // ✅ Spawn Speedsters (Wave 3+)
+        if (wave >= 3)
+        {
+            int speedsters = 1 + (wave - 3) / 5;
+            for (int i = 0; i < speedsters; i++)
+            {
+                Instantiate(speedsterPrefab, GenerateSpawnPosition(), speedsterPrefab.transform.rotation);
+            }
+        }
+
+        // ✅ Spawn Tricksters (Wave 4+)
+        if (wave >= 4)
+        {
+            int tricksters = 1 + (wave - 4) / 5;
+            for (int i = 0; i < tricksters; i++)
+            {
+                Instantiate(tricksterPrefab, GenerateSpawnPosition(), tricksterPrefab.transform.rotation);
+            }
+        }
+
+        // ✅ Spawn Exploders (Wave 5+)
+        if (wave >= 5)
+        {
+            int exploders = 1 + (wave - 5) / 5;
+            for (int i = 0; i < exploders; i++)
+            {
+                Instantiate(exploderPrefab, GenerateSpawnPosition(), exploderPrefab.transform.rotation);
+            }
+        }
+
+        // ✅ Spawn Normal Powerup (If No Powerups Exist)
         if (GameObject.FindGameObjectsWithTag("Powerup").Length == 0)
         {
+            Vector3 powerupSpawnOffset = new Vector3(0, 0, -15);
             Instantiate(powerupPrefab, GenerateSpawnPosition() + powerupSpawnOffset, powerupPrefab.transform.rotation);
         }
 
-        Debug.Log("Wave Count: " + waveCount);
-
-        // Spawn normal enemies
-        for (int i = 0; i < enemiesToSpawn; i++)
+        // ✅ 50% Chance to Spawn Magnet Boost Powerup Instead of 30% 
+        if (Random.Range(0, 100) < 50)  // 🔹 Increased to 50% chance per wave
         {
-            Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
-            Debug.Log(" Spawned Normal Enemy");
+            Instantiate(magnetBoostPrefab, GenerateSpawnPosition(), magnetBoostPrefab.transform.rotation);
+            Debug.Log(" 🧲 Magnet Boost Powerup Spawned!");
         }
 
-        //  After Round 3, spawn one more Heavy Enemy each wave
-        if (waveCount >= 3)
-        {
-            Instantiate(heavyEnemyPrefab, GenerateSpawnPosition(), heavyEnemyPrefab.transform.rotation);
-            Debug.Log(" Spawned Heavy Enemy!");
-        }
-
-        //  After Round 3, spawn one more Speedster each wave
-        if (waveCount >= 3)
-        {
-            Instantiate(speedsterPrefab, GenerateSpawnPosition(), speedsterPrefab.transform.rotation);
-            Debug.Log(" Spawned Speedster Enemy!");
-        }
-
-        //  After Round 3, spawn one more Trickster each wave
-        if (waveCount >= 3)
-        {
-            Instantiate(tricksterPrefab, GenerateSpawnPosition(), tricksterPrefab.transform.rotation);
-            Debug.Log(" Spawned Trickster Enemy!");
-        }
-
-        //  After Round 3, spawn one more Exploder each wave
-        if (waveCount >= 3)
-        {
-            Instantiate(exploderPrefab, GenerateSpawnPosition(), exploderPrefab.transform.rotation);
-            Debug.Log(" Spawned Exploder Enemy!");
-        }
-
+        // ✅ Increase wave count
         waveCount++;
         ResetPlayerPosition();
     }
@@ -94,3 +117,4 @@ public class SpawnManagerX : MonoBehaviour
         player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
     }
 }
+

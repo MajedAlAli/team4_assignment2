@@ -5,81 +5,149 @@ using UnityEngine;
 public class PlayerControllerX : MonoBehaviour
 {
     private Rigidbody playerRb;
-    private float speed = 500;
     private GameObject focalPoint;
 
     public bool hasPowerup;
     public GameObject powerupIndicator;
     public int powerUpDuration = 5;
 
-    private float normalStrength = 10; // how hard to hit enemy without powerup
-    private float powerupStrength = 25; // how hard to hit enemy with powerup
-    
-    private float boost = 10;
-    public ParticleSystem smokeParticle;
+    private float normalStrength = 10;
+    private float powerupStrength = 25;
+
+    // ✅ Adjusted Magnet Boost Variables
+    public bool hasMagnetBoost = false;
+    public float magnetStrength = 8f;  // 🔹 Lowered pull strength significantly
+    public float magnetDuration = 500f;
+    public float pullDistanceThreshold = 1000f;  // 🔹 Enemies get pulled within 12 units
+    public float maxPullSpeed = 10000f;  // 🔹 Limit max speed to prevent flying
+
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
+
+        Debug.Log("🧲 Magnet Duration at Start: " + magnetDuration);
     }
+
 
     void Update()
     {
-        // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
-        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+        playerRb.AddForce(focalPoint.transform.forward * verticalInput * Time.deltaTime);
 
-        // Set powerup indicator position to beneath player
-        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);  
+        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
 
-        if(Input.GetKeyDown(KeyCode.Space)){
-            playerRb.AddForce(focalPoint.transform.forward * boost, ForceMode.Impulse);
-            smokeParticle.Play();
+        // ✅ Space Key Boost
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Space Pressed - Boost Activated!");
+            playerRb.AddForce(focalPoint.transform.forward * 10, ForceMode.Impulse);
         }
 
+        // ✅ Apply Magnet Boost Effect
+        if (hasMagnetBoost)
+        {
+            PullEnemiesToPlayer();
+        }
     }
 
-    // If Player collides with powerup, activate powerup
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Powerup"))
         {
-            Destroy(other.gameObject);
-            hasPowerup = true;
-            powerupIndicator.SetActive(true);
-            StartCoroutine(PowerupCooldown());
+            if (other.gameObject.name.Contains("MagnetBoost"))
+            {
+                hasMagnetBoost = true;
+                powerupIndicator.SetActive(true);
+                Destroy(other.gameObject);
+                StartCoroutine(MagnetBoostCooldown());
+                Debug.Log("🧲 Magnet Boost Activated!");
+            }
+            else
+            {
+                hasPowerup = true;
+                powerupIndicator.SetActive(true);
+                Destroy(other.gameObject);
+                StartCoroutine(PowerupCooldown());
+                Debug.Log("⚡ Normal Powerup Activated!");
+            }
         }
     }
 
-    // Coroutine to count down powerup duration
+    // ✅ Magnet Boost Lasts 20 Seconds
+    IEnumerator MagnetBoostCooldown()
+    {
+        Debug.Log("🧲 Magnet Boost Started! Expected duration: " + magnetDuration + " seconds");
+
+        float elapsedTime = 0;
+        while (elapsedTime < magnetDuration)
+        {
+            yield return new WaitForSeconds(1); // Wait for 1 second each loop
+            elapsedTime += 1;
+            Debug.Log("⏳ Magnet Boost Active... " + elapsedTime + "/" + magnetDuration + " seconds passed.");
+        }
+
+        hasMagnetBoost = false;
+        powerupIndicator.SetActive(false);
+        Debug.Log("🧲 Magnet Boost Expired after " + magnetDuration + " seconds.");
+    }
+
+
+    // ✅ **Balanced Magnet Pull Effect**
+    void PullEnemiesToPlayer()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach (GameObject enemy in enemies)
+        {
+            Rigidbody enemyRb = enemy.GetComponent<Rigidbody>();
+            if (enemyRb != null)
+            {
+                Vector3 direction = (transform.position - enemy.transform.position).normalized;
+                float distance = Vector3.Distance(transform.position, enemy.transform.position);
+
+                if (distance <= pullDistanceThreshold) // 🔹 Only pull enemies within range
+                {
+                    float forceAmount = Mathf.Lerp(0, magnetStrength, 1 - (distance / pullDistanceThreshold)); // 🔹 Smooth force scaling
+                    enemyRb.AddForce(direction * forceAmount, ForceMode.Acceleration);  // 🔹 Use Acceleration for smoother pull
+
+                    // 🔹 Limit max speed to prevent enemies flying uncontrollably
+                    if (enemyRb.linearVelocity.magnitude > maxPullSpeed)
+                    {
+                        enemyRb.linearVelocity = enemyRb.linearVelocity.normalized * maxPullSpeed;
+                    }
+
+                    Debug.Log("🧲 Softly Pulling " + enemy.name + " towards player!");
+                }
+            }
+        }
+    }
+
+    // ✅ Normal Powerup Cooldown
     IEnumerator PowerupCooldown()
     {
         yield return new WaitForSeconds(powerUpDuration);
         hasPowerup = false;
         powerupIndicator.SetActive(false);
+        Debug.Log("⚡ Powerup Expired!");
     }
 
-    // If Player collides with enemy
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =  other.gameObject.transform.position  - transform.position; 
-           
-            if (hasPowerup) // if have powerup hit enemy with powerup force
-            {
-                enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
-            }
-            else // if no powerup, hit enemy with normal strength 
-            {
-                enemyRigidbody.AddForce(awayFromPlayer * normalStrength, ForceMode.Impulse);
-            }
+            Rigidbody enemyRb = other.gameObject.GetComponent<Rigidbody>();
+            Vector3 awayFromPlayer = other.gameObject.transform.position - transform.position;
 
-
+            if (hasPowerup)
+            {
+                enemyRb.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
+            }
+            else
+            {
+                enemyRb.AddForce(awayFromPlayer * normalStrength, ForceMode.Impulse);
+            }
         }
     }
-
-
-
 }
+
