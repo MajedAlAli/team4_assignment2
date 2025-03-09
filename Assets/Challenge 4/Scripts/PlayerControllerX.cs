@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerControllerX : MonoBehaviour
 {
     private Rigidbody playerRb;
-    private float speed = 500;
+    public float speed = 500;
     private GameObject focalPoint;
 
     public bool hasPowerup;
@@ -14,7 +14,7 @@ public class PlayerControllerX : MonoBehaviour
 
     private float normalStrength = 10; // how hard to hit enemy without powerup
     private float powerupStrength = 25; // how hard to hit enemy with powerup
-    
+
     private float boost = 10;
     public ParticleSystem smokeParticle;
     void Start()
@@ -27,12 +27,13 @@ public class PlayerControllerX : MonoBehaviour
     {
         // Add force to player in direction of the focal point (and camera)
         float verticalInput = Input.GetAxis("Vertical");
-        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
+        playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime);
 
         // Set powerup indicator position to beneath player
-        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);  
+        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
 
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             playerRb.AddForce(focalPoint.transform.forward * boost, ForceMode.Impulse);
             smokeParticle.Play();
         }
@@ -40,7 +41,7 @@ public class PlayerControllerX : MonoBehaviour
     }
 
     // If Player collides with powerup, activate powerup
-        private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Powerup"))
         {
@@ -79,9 +80,12 @@ public class PlayerControllerX : MonoBehaviour
             case PowerupX.PowerupType.Jump:
                 StartCoroutine(EnableJump());
                 break;
+            case PowerupX.PowerupType.Freeze:
+                //StartCoroutine(FreezeEnemies());
+                break;
         }
     }
-// Powerup Effects
+    // Powerup Effects
 
     IEnumerator SpeedBoost()
     {
@@ -93,72 +97,101 @@ public class PlayerControllerX : MonoBehaviour
     IEnumerator SlowDownEnemies()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        // Slow down enemies
         foreach (GameObject enemy in enemies)
         {
+            EnemyX enemyScript = enemy.GetComponent<EnemyX>();
             Rigidbody enemyRb = enemy.GetComponent<Rigidbody>();
-            if (enemyRb != null)
+
+            if (enemyScript != null && enemyRb != null)
             {
-                enemyRb.linearVelocity *= 0.5f; // Slow down enemy movement
+                enemyScript.speed *= 0.5f; // Reduce speed by 50%
+                enemyRb.linearVelocity *= 0.5f;  // Reduce current movement speed
             }
         }
+
         yield return new WaitForSeconds(powerUpDuration);
 
         // Restore original enemy speed
         foreach (GameObject enemy in enemies)
         {
+            EnemyX enemyScript = enemy.GetComponent<EnemyX>();
+            Rigidbody enemyRb = enemy.GetComponent<Rigidbody>();
+
+            if (enemyScript != null && enemyRb != null)
+            {
+                enemyScript.speed *= 2f; // Restore speed
+                enemyRb.linearVelocity *= 2f;  // Restore movement speed
+            }
+        }
+    }
+    IEnumerator EnableMagnet()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach (GameObject enemy in enemies)
+        {
             Rigidbody enemyRb = enemy.GetComponent<Rigidbody>();
             if (enemyRb != null)
             {
-                enemyRb.linearVelocity *= 2f; // Reset enemy speed
+                Vector3 directionToGoal = (enemyRb.transform.position - GameObject.Find("Enemy Goal").transform.position).normalized;
+                enemyRb.linearVelocity = -directionToGoal * 10f; // Pull toward enemy goal
             }
         }
-    }
 
-    IEnumerator EnableMagnet()
-    {
-        // Example: Apply magnet effect (e.g., attract ball)
         yield return new WaitForSeconds(powerUpDuration);
-    }
 
-IEnumerator EnableJump()
-{
-    float jumpForce = 20f;   // Upward force
-    float smashForce = -40f; // Downward force (to smash ground)
-    float explosionRadius = 10f; // How far enemies are affected
-    float maxImpactForce = 40f; // Max force for nearby enemies
-
-    // Apply upward force to jump
-    playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-
-    // Wait in the air for a short time
-    yield return new WaitForSeconds(0.5f);
-
-    // Apply downward force to create a smash effect
-    playerRb.AddForce(Vector3.up * smashForce, ForceMode.Impulse);
-
-    // Wait a little before applying knockback to enemies
-    yield return new WaitForSeconds(0.2f);
-
-    // Get all enemies in range
-    Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
-    foreach (Collider hitCollider in hitColliders)
-    {
-        if (hitCollider.CompareTag("Enemy"))
+        // Restore enemy movement by clearing velocity
+        foreach (GameObject enemy in enemies)
         {
-            Rigidbody enemyRb = hitCollider.GetComponent<Rigidbody>();
+            Rigidbody enemyRb = enemy.GetComponent<Rigidbody>();
             if (enemyRb != null)
             {
-                // Calculate knockback force based on distance
-                float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
-                float knockbackForce = Mathf.Lerp(maxImpactForce, 20f, distance / explosionRadius); // Closer = stronger
-
-                // Apply force outward from the player
-                Vector3 direction = hitCollider.transform.position - transform.position;
-                enemyRb.AddForce(direction.normalized * knockbackForce, ForceMode.Impulse);
+                enemyRb.linearVelocity = Vector3.zero; // Stop movement after magnet ends
             }
         }
     }
-}
+
+    IEnumerator EnableJump()
+    {
+        float jumpForce = 20f;   // Upward force
+        float smashForce = -40f; // Downward force (to smash ground)
+        float explosionRadius = 10f; // How far enemies are affected
+        float maxImpactForce = 40f; // Max force for nearby enemies
+
+        // Apply upward force to jump
+        playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+        // Wait in the air for a short time
+        yield return new WaitForSeconds(0.5f);
+
+        // Apply downward force to create a smash effect
+        playerRb.AddForce(Vector3.up * smashForce, ForceMode.Impulse);
+
+        // Wait a little before applying knockback to enemies
+        yield return new WaitForSeconds(0.2f);
+
+        // Get all enemies in range
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Enemy"))
+            {
+                Rigidbody enemyRb = hitCollider.GetComponent<Rigidbody>();
+                if (enemyRb != null)
+                {
+                    // Calculate knockback force based on distance
+                    float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
+                    float knockbackForce = Mathf.Lerp(maxImpactForce, 20f, distance / explosionRadius); // Closer = stronger
+
+                    // Apply force outward from the player
+                    Vector3 direction = hitCollider.transform.position - transform.position;
+                    enemyRb.AddForce(direction.normalized * knockbackForce, ForceMode.Impulse);
+                }
+            }
+        }
+    }
 
 
     // Coroutine to reset powerup effect after duration
@@ -177,8 +210,8 @@ IEnumerator EnableJump()
         if (other.gameObject.CompareTag("Enemy"))
         {
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =  other.gameObject.transform.position  - transform.position; 
-           
+            Vector3 awayFromPlayer = other.gameObject.transform.position - transform.position;
+
             if (hasPowerup) // if have powerup hit enemy with powerup force
             {
                 enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
