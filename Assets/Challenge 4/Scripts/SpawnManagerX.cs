@@ -44,30 +44,33 @@ public class SpawnManagerX : MonoBehaviour
 
     void SpawnEnemyWave(int enemiesToSpawn)
     {
-        Vector3 powerupSpawnOffset = new Vector3(0, 0, -15); // make powerups spawn at player end
+        Vector3 powerupSpawnOffset = new Vector3(0, 0, -15); // Spawn near the player
 
-        // If no powerups remain, spawn a regular powerup
-        if (GameObject.FindGameObjectsWithTag("Powerup").Length == 0)
+        // Destroy any leftover power-ups from the previous wave
+        GameObject[] oldPowerups = GameObject.FindGameObjectsWithTag("Powerup");
+        GameObject[] oldSmashPowerups = GameObject.FindGameObjectsWithTag("PowerupSmash");
+
+        foreach (GameObject powerup in oldPowerups)
         {
-            Instantiate(powerupPrefab, GenerateSpawnPosition() + new Vector3(0, 0, -15), powerupPrefab.transform.rotation);
+            Destroy(powerup);
+        }
+        foreach (GameObject powerup in oldSmashPowerups)
+        {
+            Destroy(powerup);
         }
 
-        // Randomly decide whether to spawn the Smash Power-Up
-        if (Random.value < smashPowerupChance) // 30% chance per wave
-        {
-            Instantiate(smashPowerupPrefab, GenerateSpawnPosition(), smashPowerupPrefab.transform.rotation);
-        }
+        // Ensure only ONE power-up spawns per wave, with a 50% chance for each type
+        GameObject powerupToSpawn = Random.value < 0.5f ? powerupPrefab : smashPowerupPrefab;
+        Instantiate(powerupToSpawn, GenerateSpawnPosition() + powerupSpawnOffset, powerupToSpawn.transform.rotation);
 
-
-        // Spawn number of enemy balls based on wave number
-        for (int i = 0; i < enemiesToSpawn ; i++)
+        // Spawn enemies
+        for (int i = 0; i < enemiesToSpawn; i++)
         {
             Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
         }
 
         waveCount++;
-        ResetPlayerPosition(); // put player back at start
-
+        ResetPlayerPosition(); // Reset player
     }
 
     // Move player back to position in front of own goal
