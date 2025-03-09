@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 1291255971543755030}
   - component: {fileID: -8916545268119092182}
   - component: {fileID: 3878580431703916322}
+  - component: {fileID: -4375678929890482979}
   m_Layer: 0
   m_Name: Trickster
   m_TagString: Enemy
@@ -485,3 +486,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-4375678929890482979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8932280921958007952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be0bd2d7fdd7b3b46a74a0333ce9eda2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashForce: 15
+  dashInterval: 8
+  speed: 10
+  explosionParticle: {fileID: 625621707174889904, guid: ef43e5aef41c142fb85a7658a397dc75, type: 3}
+  ball: {fileID: -8916545268119092182}
+  wall: {fileID: -8916545268119092182}
