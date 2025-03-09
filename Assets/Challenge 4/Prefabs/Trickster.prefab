@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: -8916545268119092182}
   - component: {fileID: 3878580431703916322}
   m_Layer: 0
-  m_Name: Exploder
+  m_Name: Trickster
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -192,7 +192,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ac3f2764ff572427d9a5aa929e3f561e, type: 2}
+  - {fileID: 2100000, guid: 7051f5998f0854da08b10c563270af9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
