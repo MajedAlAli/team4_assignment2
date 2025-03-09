@@ -14,7 +14,15 @@ public class PlayerControllerX : MonoBehaviour
 
     private float normalStrength = 10; // how hard to hit enemy without powerup
     private float powerupStrength = 25; // how hard to hit enemy with powerup
-    
+
+    public bool hasSmashPowerup = false;
+    public float smashHeight = 5f;
+    public float smashForce = 30f;
+    public float smashRadius = 10f;
+    public GameObject smashpowerupIndicator;
+    public ParticleSystem explosionParticle;
+
+
     private float boost = 10f;
     public bool gameIsActive;
 
@@ -32,13 +40,19 @@ public class PlayerControllerX : MonoBehaviour
         playerRb.AddForce(focalPoint.transform.forward * verticalInput * speed * Time.deltaTime); 
 
         // Set powerup indicator position to beneath player
-        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.4f, 0);  
+        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.4f, 0);
+        smashpowerupIndicator.transform.position = transform.position + new Vector3(0, -0.4f, 0);
+        explosionParticle.transform.position = transform.position + new Vector3(0, 0, 0);
 
         if(Input.GetKeyDown(KeyCode.Space)&&gameIsActive){
             playerRb.AddForce(focalPoint.transform.forward * boost, ForceMode.Impulse);
             FindAnyObjectByType<AudioManager>().Play("Boost");
         }
 
+        if (Input.GetKeyDown(KeyCode.E) && hasSmashPowerup)
+        {
+            StartCoroutine(SmashAttack());
+        }
     }
 
     // If Player collides with powerup, activate powerup
@@ -52,6 +66,51 @@ public class PlayerControllerX : MonoBehaviour
             powerupIndicator.SetActive(true);
             StartCoroutine(PowerupCooldown());
         }
+        else if (other.gameObject.CompareTag("PowerupSmash")) // New powerup
+        {
+            FindAnyObjectByType<AudioManager>().Play("PowerUp");
+            Destroy(other.gameObject);
+            hasSmashPowerup = true;
+            smashpowerupIndicator.SetActive(true);
+            StartCoroutine(SmashPowerupCooldown());
+        }
+    }
+
+    IEnumerator SmashAttack()
+    {
+        if (hasSmashPowerup)
+        {
+            hasSmashPowerup = false;
+            FindAnyObjectByType<AudioManager>().Stop("PowerUp CountDown");
+            FindAnyObjectByType<AudioManager>().Play("Whoosh");
+            playerRb.linearVelocity = new Vector3(0, smashHeight, 0); // Jump up
+            yield return new WaitForSeconds(0.5f); // Wait before slamming down
+
+            playerRb.linearVelocity = new Vector3(0, -smashHeight * 2, 0); // Slam down
+
+            yield return new WaitUntil(() => playerRb.linearVelocity.y == 0); // Wait until grounded
+
+            smashpowerupIndicator.SetActive(false);
+            FindAnyObjectByType<AudioManager>().Play("PowerUp Hit");
+            explosionParticle.Play();
+
+            Collider[] enemies = Physics.OverlapSphere(transform.position, smashRadius);
+            foreach (Collider enemy in enemies)
+            {
+                if (enemy.CompareTag("Enemy"))
+                {
+                    Rigidbody enemyRb = enemy.GetComponent<Rigidbody>();
+                    if (enemyRb != null)
+                    {
+                        float distance = Vector3.Distance(transform.position, enemy.transform.position);
+                        float force = Mathf.Lerp(smashForce, 5f, distance / smashRadius); // Stronger force if closer
+                        Vector3 direction = (enemy.transform.position - transform.position).normalized;
+
+                        enemyRb.AddForce(direction * force, ForceMode.Impulse);
+                    }
+                }
+            }
+        }
     }
 
     // Coroutine to count down powerup duration
@@ -62,6 +121,15 @@ public class PlayerControllerX : MonoBehaviour
         FindAnyObjectByType<AudioManager>().Stop("PowerUp CountDown");
         hasPowerup = false;
         powerupIndicator.SetActive(false);
+    }
+
+    IEnumerator SmashPowerupCooldown()
+    {
+        FindAnyObjectByType<AudioManager>().Play("PowerUp CountDown");
+        yield return new WaitForSeconds(powerUpDuration);
+        FindAnyObjectByType<AudioManager>().Stop("PowerUp CountDown");
+        hasSmashPowerup = false;
+        smashpowerupIndicator.SetActive(false);
     }
 
     // If Player collides with enemy
@@ -95,8 +163,10 @@ public class PlayerControllerX : MonoBehaviour
         if(!gameIsActive)
         {
             FindAnyObjectByType<AudioManager>().Stop("PowerUp CountDown");
-            powerupIndicator.SetActive(false);
             hasPowerup = false;
+            hasSmashPowerup = false;
+            powerupIndicator.SetActive(false);
+            smashpowerupIndicator.SetActive(false);
         }
     }
 }

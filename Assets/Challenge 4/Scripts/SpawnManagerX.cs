@@ -7,6 +7,9 @@ public class SpawnManagerX : MonoBehaviour
     public GameObject enemyPrefab;
     public GameObject powerupPrefab;
     public GameObject focalPoint;
+    public GameObject smashPowerupPrefab; // New smash power-up
+    public float smashPowerupChance = 0.3f; // 30% chance to spawn per wave
+
 
     private float spawnRangeX = 10;
     private float spawnZMin = 15; // set min spawn Z
@@ -43,11 +46,18 @@ public class SpawnManagerX : MonoBehaviour
     {
         Vector3 powerupSpawnOffset = new Vector3(0, 0, -15); // make powerups spawn at player end
 
-        // If no powerups remain, spawn a powerup
-        if (GameObject.FindGameObjectsWithTag("Powerup").Length == 0) // check that there are zero powerups
+        // If no powerups remain, spawn a regular powerup
+        if (GameObject.FindGameObjectsWithTag("Powerup").Length == 0)
         {
-            Instantiate(powerupPrefab, GenerateSpawnPosition() + powerupSpawnOffset, powerupPrefab.transform.rotation);
+            Instantiate(powerupPrefab, GenerateSpawnPosition() + new Vector3(0, 0, -15), powerupPrefab.transform.rotation);
         }
+
+        // Randomly decide whether to spawn the Smash Power-Up
+        if (Random.value < smashPowerupChance) // 30% chance per wave
+        {
+            Instantiate(smashPowerupPrefab, GenerateSpawnPosition(), smashPowerupPrefab.transform.rotation);
+        }
+
 
         // Spawn number of enemy balls based on wave number
         for (int i = 0; i < enemiesToSpawn ; i++)
