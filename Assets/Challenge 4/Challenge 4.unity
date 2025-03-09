@@ -334,8 +334,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8932280921958007952, guid: 47045ccb8f3944b9b8a55f6b07f0aefc, type: 3}
   powerupPrefabs:
-  - {fileID: 4446131693967519089, guid: 53e10e54707244fc88e3e9199669bcbb, type: 3}
-  - {fileID: 4446131693967519089, guid: 53e10e54707244fc88e3e9199669bcbb, type: 3}
+  - {fileID: 4446131693967519089, guid: 1b9d76dcdbfb54c6aa713dc25f91b03b, type: 3}
+  - {fileID: 4446131693967519089, guid: 1b9d76dcdbfb54c6aa713dc25f91b03b, type: 3}
   enemyCount: 0
   waveCount: 1
   player: {fileID: 583048338}

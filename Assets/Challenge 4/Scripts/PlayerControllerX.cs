@@ -81,7 +81,7 @@ public class PlayerControllerX : MonoBehaviour
                 StartCoroutine(EnableJump());
                 break;
             case PowerupX.PowerupType.Freeze:
-                //StartCoroutine(FreezeEnemies());
+                StartCoroutine(FreezeEnemies());
                 break;
         }
     }
@@ -93,6 +93,41 @@ public class PlayerControllerX : MonoBehaviour
         yield return new WaitForSeconds(powerUpDuration);
         speed /= 2; // Reset speed
     }
+IEnumerator FreezeEnemies()
+{
+    GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+    Dictionary<GameObject, float> enemySpeeds = new Dictionary<GameObject, float>();
+
+    // Freeze enemies but allow physics interactions
+    foreach (GameObject enemy in enemies)
+    {
+        EnemyX enemyScript = enemy.GetComponent<EnemyX>();
+        Rigidbody enemyRb = enemy.GetComponent<Rigidbody>();
+
+        if (enemyScript != null && enemyRb != null)
+        {
+            enemySpeeds[enemy] = enemyScript.speed; // Store original speed
+
+            enemyScript.speed = 0f; // Stop enemy from chasing the goal
+            enemyRb.linearVelocity = Vector3.zero;  // Stop current movement
+            enemyRb.angularVelocity = Vector3.zero; // Stop rotation 
+        }
+    }
+
+    yield return new WaitForSeconds(powerUpDuration);
+
+    // Restore original speed
+    foreach (GameObject enemy in enemies)
+    {
+        EnemyX enemyScript = enemy.GetComponent<EnemyX>();
+
+        if (enemyScript != null)
+        {
+            enemyScript.speed = enemySpeeds[enemy]; // Restore original movement speed
+        }
+    }
+}
 
     IEnumerator SlowDownEnemies()
     {
