@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class SpawnManagerX : MonoBehaviour
 {
-    public GameObject enemyPrefab;
-    public GameObject powerupPrefab;
+    public GameObject[] enemyPrefabs;
     public GameObject focalPoint;
     public GameObject smashPowerupPrefab; // New smash power-up
     public float smashPowerupChance = 0.3f; // 30% chance to spawn per wave
@@ -69,7 +68,8 @@ public class SpawnManagerX : MonoBehaviour
         // Spawn number of enemy balls based on wave number
         for (int i = 0; i < enemiesToSpawn ; i++)
         {
-            Instantiate(enemyPrefab, GenerateSpawnPosition(), enemyPrefab.transform.rotation);
+            randomIndex = Random.Range(0, enemyPrefabs.Length);
+            Instantiate(enemyPrefabs[randomIndex], GenerateSpawnPosition(), Quaternion.identity);
         }
 
         waveCount++;
