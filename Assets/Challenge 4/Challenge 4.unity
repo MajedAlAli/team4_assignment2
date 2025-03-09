@@ -339,6 +339,7 @@ MonoBehaviour:
   exploderPrefab: {fileID: 8932280921958007952, guid: d4929d1fa7c01af4897da7505337032d, type: 3}
   powerupPrefab: {fileID: 4446131693967519089, guid: c5497424856514b2ba61b78375567988, type: 3}
   magnetBoostPrefab: {fileID: 4446131693967519089, guid: 1d58bcf100bcae04bbae142265882d6d, type: 3}
+  doubleTroublePrefab: {fileID: 4446131693967519089, guid: 84b58e8868b4fe1458b4fe3786a1c9f3, type: 3}
   enemyCount: 0
   waveCount: 1
   player: {fileID: 583048338}
@@ -555,12 +556,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasPowerup: 0
   powerupIndicator: {fileID: 1427939658}
-  powerUpDuration: 5
+  powerUpDuration: 10
   hasMagnetBoost: 0
-  magnetStrength: 10
-  magnetDuration: 5
-  pullDistanceThreshold: 5
-  maxPullSpeed: 2
+  magnetStrength: 5
+  magnetDuration: 13
+  pullDistanceThreshold: 100
+  maxPullSpeed: 5
+  aiAllyPrefab: {fileID: 8932280921958007952, guid: a5cbb74710e33244fa5539439bc3e053, type: 3}
 --- !u!1 &680832294
 GameObject:
   m_ObjectHideFlags: 0
