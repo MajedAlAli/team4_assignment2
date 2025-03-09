@@ -2,7 +2,7 @@
 
 ## Main Contributions
 
-- **Majed**: Downloaded and completed the challenge, created and implemented six different powerups.  
+- **Majed**: Downloaded and completed the challenge, created and implemented six different powerups and create the mainmenu.  
 - **Mohammad**: *[Pending]*  
 - **Ebrahim**: *[Pending]*  
 
