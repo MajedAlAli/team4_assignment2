@@ -17,8 +17,9 @@ public class SpawnManagerX : MonoBehaviour
 
     public int enemyCount;
     public int waveCount = 1;
+    public GameObject[] powerupPrefabs;
 
-
+    private int lastPowerupIndex = -1; // Stores the last powerup index
     public GameObject player; 
 
     // Update is called once per frame
@@ -41,23 +42,29 @@ public class SpawnManagerX : MonoBehaviour
         return new Vector3(xPos, 0, zPos);
     }
 
-
-    void SpawnEnemyWave(int enemiesToSpawn)
+        void SpawnEnemyWave(int enemiesToSpawn)
     {
-        Vector3 powerupSpawnOffset = new Vector3(0, 0, -15); // make powerups spawn at player end
+        Vector3 powerupSpawnOffset = new Vector3(0, 0, -15); // Make powerups spawn at player end
 
-        // If no powerups remain, spawn a regular powerup
-        if (GameObject.FindGameObjectsWithTag("Powerup").Length == 0)
+        // Destroy existing powerup before spawning a new one
+        GameObject existingPowerup = GameObject.FindGameObjectWithTag("Powerup");
+        if (existingPowerup != null)
         {
-            Instantiate(powerupPrefab, GenerateSpawnPosition() + new Vector3(0, 0, -15), powerupPrefab.transform.rotation);
+            Destroy(existingPowerup);
         }
 
-        // Randomly decide whether to spawn the Smash Power-Up
-        if (Random.value < smashPowerupChance) // 30% chance per wave
+        // Pick a new powerup that is different from the last one
+        int randomIndex;
+        do
         {
-            Instantiate(smashPowerupPrefab, GenerateSpawnPosition(), smashPowerupPrefab.transform.rotation);
-        }
+            randomIndex = Random.Range(0, powerupPrefabs.Length);
+        } 
+        while (randomIndex == lastPowerupIndex); // Ensure it's different
 
+        lastPowerupIndex = randomIndex; // Store the new powerup index
+
+        // Spawn the new powerup
+        Instantiate(powerupPrefabs[randomIndex], GenerateSpawnPosition() + powerupSpawnOffset, Quaternion.identity);
 
         // Spawn number of enemy balls based on wave number
         for (int i = 0; i < enemiesToSpawn ; i++)
