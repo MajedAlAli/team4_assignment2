@@ -63,12 +63,10 @@ public class SpawnManagerX : MonoBehaviour
     // Move player back to position in front of own goal
     void ResetPlayerPosition ()
     {
-        player.transform.position = new Vector3(0, 1, -7);
+        player.transform.position = new Vector3(0, 0, -7);
         focalPoint.transform.rotation = Quaternion.Euler(0, 0, 0);
         player.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        FindAnyObjectByType<AudioManager>().Play("StartWhistle");
-
     }
 
 }
