@@ -4,7 +4,7 @@
 
 - **Majed**: Downloaded and completed the challenge, created and implemented six different powerups and create the mainmenu.  
 - **Mohammad**: Upgraded the overall aesthetics(look) and feel of the game, implemented the score system and the timer, created the sound design of the game.
-- **Ebrahim**: *[Pending]*  
+- **Ebrahim**: Designed and implemented different enemy types with unique behavior and characteristics 
 
 ## Branch Structure
 
