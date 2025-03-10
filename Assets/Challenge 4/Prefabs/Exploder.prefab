@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 1291255971543755030}
   - component: {fileID: -8916545268119092182}
   - component: {fileID: 3878580431703916322}
+  - component: {fileID: -7910702527337535220}
   m_Layer: 0
   m_Name: Exploder
   m_TagString: Enemy
@@ -485,3 +486,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-7910702527337535220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8932280921958007952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45a2315afd6c747e392f78126ef626b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  explosionParticle: {fileID: 4758139293545943008, guid: c7ad2532a6eeb40b59033c75e71fa054, type: 3}
+  ball: {fileID: -8916545268119092182}
+  wall: {fileID: -8916545268119092182}
