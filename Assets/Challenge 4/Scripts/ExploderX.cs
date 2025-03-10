@@ -63,7 +63,7 @@ public class ExploderX : MonoBehaviour
         }else if (other.gameObject.CompareTag("Enemy"))
         {
             ball.Play();
-        } else if (other.gameObject.name == "Player")
+        } else if (other.gameObject.CompareTag("Player"))
         {
             FindAnyObjectByType<AudioManager>().Play("Explode");
         float explosionRadius = 10f; // How far enemies are affected
