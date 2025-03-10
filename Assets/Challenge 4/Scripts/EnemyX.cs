@@ -39,8 +39,9 @@ public class EnemyX : MonoBehaviour
         if (other.gameObject.name == "Enemy Goal")
         {
             FindAnyObjectByType<AudioManager>().Play("Explode");
-            Destroy(gameObject);
+
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+            Destroy(gameObject);
             ScoreManager.instance.AddPointHome();
             ScoreManager.instance.DisplayMessageHome();
             FindAnyObjectByType<AudioManager>().Play("Goal");
@@ -49,8 +50,9 @@ public class EnemyX : MonoBehaviour
         else if (other.gameObject.name == "Player Goal")
         {
             FindAnyObjectByType<AudioManager>().Play("Explode");
-            Destroy(gameObject);
+
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+            Destroy(gameObject);
             ScoreManager.instance.AddPointAway();
             ScoreManager.instance.DisplayMessageAway();
             FindAnyObjectByType<AudioManager>().Play("Goal");
