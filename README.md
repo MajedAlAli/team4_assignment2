@@ -3,7 +3,7 @@
 ## Main Contributions
 
 - **Majed**: Downloaded and completed the challenge, created and implemented six different powerups and create the mainmenu.  
-- **Mohammad**: upgraded the overall aesthetics(look) and feel of the game, implemented the score system and the timer, created the sound design of the game.
+- **Mohammad**: Upgraded the overall aesthetics(look) and feel of the game, implemented the score system and the timer, created the sound design of the game.
 - **Ebrahim**: *[Pending]*  
 
 ## Branch Structure
