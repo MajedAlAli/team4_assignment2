@@ -87,10 +87,9 @@ public class ExploderX : MonoBehaviour
                     Vector3 direction = hitCollider.transform.position - transform.position;
                     enemyRb.AddForce(direction.normalized * knockbackForce, ForceMode.Impulse);
                 }
-            Destroy(gameObject);
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             FindAnyObjectByType<AudioManager>().Play("CrowdBoo");
-
+            Destroy(gameObject);
         }
 
     }
