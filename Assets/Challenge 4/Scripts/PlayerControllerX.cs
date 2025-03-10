@@ -316,12 +316,15 @@ IEnumerator FreezeEnemies()
 
         // Apply upward force to jump
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        FindAnyObjectByType<AudioManager>().Play("Whoosh");
 
         // Wait in the air for a short time
         yield return new WaitForSeconds(0.5f);
 
         // Apply downward force to create a smash effect
         playerRb.AddForce(Vector3.up * smashForce, ForceMode.Impulse);
+        FindAnyObjectByType<AudioManager>().Play("PowerUp Hit");
+        explosionParticle.Play();
 
         // Wait a little before applying knockback to enemies
         yield return new WaitForSeconds(0.2f);
