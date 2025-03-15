@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class EnemyX : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class EnemyX : MonoBehaviour
     private GameObject playerGoal;
     private SpawnManagerX smScript;
     private float waveCount;
+    public ParticleSystem explosionParticle;
+    public AudioSource ball;
+    public AudioSource wall;
 
     // Start is called before the first frame update
     void Start()
@@ -34,11 +38,33 @@ public class EnemyX : MonoBehaviour
         // If enemy collides with either goal, destroy it
         if (other.gameObject.name == "Enemy Goal")
         {
+            FindAnyObjectByType<AudioManager>().Play("Explode");
+
+            Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             Destroy(gameObject);
+            ScoreManager.instance.AddPointHome();
+            ScoreManager.instance.DisplayMessageHome();
+            FindAnyObjectByType<AudioManager>().Play("Goal");
+            FindAnyObjectByType<AudioManager>().Play("CrowdCheer");
         } 
         else if (other.gameObject.name == "Player Goal")
         {
+            FindAnyObjectByType<AudioManager>().Play("Explode");
+
+            Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             Destroy(gameObject);
+            ScoreManager.instance.AddPointAway();
+            ScoreManager.instance.DisplayMessageAway();
+            FindAnyObjectByType<AudioManager>().Play("Goal");
+            FindAnyObjectByType<AudioManager>().Play("CrowdBoo");
+
+        }else if (other.gameObject.CompareTag("Wall"))
+        {
+            wall.Play();
+            
+        }else if (other.gameObject.CompareTag("Enemy"))
+        {
+            ball.Play();
         }
 
     }

@@ -1,0 +1,30 @@
+Documentation of 3D Football/Soccer Stadium
+
+In this Pack, We have seen 3D model of Football Stadium. Low poly 3D stadium you can use it in your games and videos as well.
+
+Models are made with 4 textures. Models are low poly. The Complete 3D 3D Football Stadium consists of different objects created individually, 
+so you can use them to create an intuitive and eye-catching user interface for your 3D game or animated video. The vectors can be edited 
+and placed at any scene in the game/video to give it a more defined look. Specially this pack is use for 3D Football game. 
+we have different folders:
+
+1) Material:
+	Models are made more than 6 materials.
+2) Models: 
+	In this models folder you will see Model of 3D Football Stadium inside it.
+3) Prefabs: 
+	 you will see only prefab of this model.
+4) Scene: 
+	There you will see all the props in the scene.
+5) Texture:
+	Models are made more than 4 textures.
+6) Documentation
+	Read me file
+
+
+All the prefabs are created, you can use each prefabs according to your game environment. you just need to drag and drop each prefab
+wherever you want. you can create a big environment for your 3d games and 3d animation. Each objects are scaleable, you can transform 
+and rotate every object.
+
+
+
+ 
